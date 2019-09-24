@@ -13,7 +13,7 @@ This is the architecture document that serves as a technical overview of work pe
 - [Source Code](#source-code)
 - [Data Source Specifics](#data-source-specifics)
   - [Bluetooth](#bluetooth)
-  - [GRIDSMRT](#gridsmrt)
+  - [GRIDSMART](#gridsmart)
   - [Wavetronix](#wavetronix)
 - [Data Lake Catalog](#data-lake-catalog)
 - [Other Coding Challenges](#other-coding-challenges)
@@ -95,7 +95,7 @@ Within the `nmc/coa_dev` source code tree, command-line entry points are current
 
 [Go to further information on Bluetooth.](datasrc_bt.md)
 
-### GRIDSMRT
+### GRIDSMART
 
 [Go to further information on GRIDSMART.](datasrc_gs.md)
 
