@@ -7,7 +7,7 @@ Bluetooth data has three data file types: Individual Address Files (IAF), Indivi
 | Bluetooth System Architecture <br><img src="figures/new_bt_overview.png">
 | ---
 
-## IAF: Individual Address Files and Common Functionality
+## Individual Address Files (IAF) and Common Functionality
 
 ### Layer 1 Raw
 
@@ -21,7 +21,7 @@ An Individual Address File data file contains each device detected per day. Each
 | 4 | Host Reader ID | String | The reader ID of the field device | Woodway_ChimneyRock |
 | 5 | Personal Device Address | String | Encoded MAC address of the personal device that was read by field device | =MjU6MDA6Rjk6Mjk6NDl |
 
-The code that processes `raw` Blutetooth IAF, as well as ITMF and TMSR is `aws_transport/bt_insert_lake.py`. That code runs on the ATD traffic control network, and looks in a mounted directory full of data files that is maintained by the Bluetooth detector system. On the host system, that share is mounted with this command (and equivalent fstab entry) (fill in username/password, and valid network address for the Samba file share):
+The code that processes `raw` Blutetooth IAF, as well as ITMF and TMSR is `aws_transport/bt_insert_lake.py`. That code runs on the ATD traffic control network and looks in a mounted directory full of data files that is maintained by the Bluetooth detector system. On the host system, that share is mounted with this command (and equivalent fstab entry) (fill in username/password, and valid network address for the Samba file share):
 
 `sudo mount -t cifs -o username=****,password=**** //00.00.00.00/awamdata /mnt/awam`
 
@@ -70,7 +70,7 @@ These data files are generally considered sensitive because the hashed MAC addre
 
 ### Layer 2 Unit Data
 
-The code that processes `raw` to `rawjson` Blutetooth IAF, as well as ITMF and TMSR, and Unit Data is `aws_transport/bt_json_standard.py`. The Unit Data, which comes from Knack, is structured as follows:
+The code that processes `raw` to `rawjson` Blutetooth IAF, as well as ITMF, TMSR, and Unit Data is `aws_transport/bt_json_standard.py`. The Unit Data, which comes from Knack, is structured as follows:
 
 ```json
 {
@@ -101,7 +101,7 @@ The code that processes `raw` to `rawjson` Blutetooth IAF, as well as ITMF and T
 
 ### Layer 3 Ready Data
 
-The `aws_transport/bt_ready.py` code reads from the `rawjson` bucket, resolves the "reader_id" to the respective entry in the Unit Data, and writes to the `ready` bucket. Effectively, all necessary Unit Data "devices" entries are added to the JSON containing "data", and linkages are created between "data"."device_id" and "devices"."device_id".
+The `aws_transport/bt_ready.py` code reads from the `rawjson` bucket, resolves the "reader_id" to the respective entry in the Unit Data, and writes to the `ready` bucket. Effectively, all necessary Unit Data "devices" entries are added to the JSON containing "data", and linkages are created between "data,""device_id," and "devices"."device_id."
 
 ```json
 {
@@ -152,7 +152,7 @@ The `aws_transport/bt_ready.py` code reads from the `rawjson` bucket, resolves t
 
 ### Unmatched CSV Extract
 
-A proof-of-concept was created to extract `ready` Bluetooth IAF data to CSV. The Use Case #1 was intended to demonstrate an end-to-end path for extracting Bluetooth data from the Data Lake that could be in response to a public information request, or for other purposes of data analysis. That code is `aws_transport/bt_extract_unm.py`. An example of its usage is:
+A proof-of-concept was created to extract `ready` Bluetooth IAF data to CSV. The Use Case #1 was intended to demonstrate an end-to-end path for extracting Bluetooth data from the Data Lake, such as would be used in response to a public information request or for other data analysis purposes. That code is `aws_transport/bt_extract_unm.py`. An example of its usage is:
 
 `python bt_extract_unm_csv.py -s "2019-03-23 08:00:00" -e "2019-03-23 09:00:00" -f congress`
 
@@ -172,11 +172,11 @@ The data stored within the table is documented on the [Socrata page](https://dat
 
 The [JSON export](defs/socrata-bt-iaf.json) also has the column definitions, under the "meta"."view"."columns" section.
 
-## ITMF: Individual Traffic Match Files
+## Individual Traffic Match Files (ITMF)
 
 ### Layer 1 Raw
 
-This is an excerpt of an ITMF file, named according to the pattern, `Austin_btmatch_MM-DD-YYYY.txt`. The code `aws_transport/bt_json_standard.py` reads in the file from the AWAM share and copies it to the `raw` bucket.
+An excerpt of an ITMF file, named according to the pattern `Austin_btmatch_MM-DD-YYYY.txt` follows. The code `aws_transport/bt_json_standard.py` reads in the file from the AWAM share and copies it to the `raw` bucket.
 
 ```
 RDM6QzI6NjE6RDA6MDM=,lamar_mlk,lamar_6th,5/31/2019 11:48:20 PM,5/31/2019 11:59:46 PM,686,5,invalid,125
@@ -191,7 +191,7 @@ QjI6Q0M6MEE6Mjk6QjI=,Lamar_Blue_Bonnet,Lamar_and_Manchca_Barton_skyway,5/31/2019
 MDA6MDA6MDA6QTA6MEU=,guadalupe_26th,guadalupe_24th,5/31/2019 11:59:31 PM,5/31/2019 11:59:55 PM,23,23,valid,125
 ```
 
-At the moment, official documentation for the Post Oak Traffic AWAM Bluetooth reader is hosted at https://github.com/cityofaustin/hack-the-traffic/tree/master/docs. Each row represents a pair of readings for a particular mobile device, and has the following columns:
+At the moment, official documentation for the Post Oak Traffic AWAM Bluetooth reader is hosted at https://github.com/cityofaustin/hack-the-traffic/tree/master/docs. Each row represents a pair of readings for a particular mobile device and has the following columns:
 
 | **Column** | **Element Name** | **Description**
 | --- | --- | ---
@@ -202,7 +202,7 @@ At the moment, official documentation for the Post Oak Traffic AWAM Bluetooth re
 | 5 | End Time | The time the device address was recorded at the destination sensor.
 | 6 | Travel Time Seconds | The travel time in seconds from the origin to the destination sensor.
 | 7 | Speed Miles Per Hour | The speed in miles per hour between the origin and the destination sensors.
-| 8 | Match Validity | Indicates whether the sensor server classified the traffic data sample as being valid or invalid based on the filtering algorithm and minimum/maximum allowable speeds applied to the roadway segment. Values are "valid" or "invalid".
+| 8 | Match Validity | Indicates whether the sensor server classified the traffic data sample as being valid or invalid based on the filtering algorithm and minimum/maximum allowable speeds applied to the roadway segment. Values are "valid" or "invalid."
 | 9 | Filter Identifier | The numeric code of the filtering algorithm used in the outlier filter for the roadway segment. See the host documentation section titled "Algorithm Configuration" for more information.
 
 ### Layer 2 JSON Data
@@ -260,7 +260,7 @@ The key to CSV column mapping is:
 
 ### Layer 3 Ready Data
 
-The `aws_transport/bt_ready.py` code reads from the `rawjson` bucket, resolves reader identifiers to the respective entries in the Unit Data, and writes to the `ready` bucket. In the spirit of before, linkages are created between "data"."*_device_id" and "devices"."device_id".
+The `aws_transport/bt_ready.py` code reads from the `rawjson` bucket, resolves reader identifiers to the respective entries in the Unit Data, and writes to the `ready` bucket. Linkages are created between "data"."*_device_id" and "devices"."device_id."
 
 ```json
 {
@@ -330,11 +330,11 @@ The code that loads `ready` to Socrata Blutetooth ITMF ("Bluetooth Travel Sensor
 
 The data stored within the table is documented on the [Socrata page](https://data.austintexas.gov/Transportation-and-Mobility/Bluetooth-Travel-Sensors-Individual-Traffic-Match-/x44q-icha). The [JSON export](defs/socrata-bt-itmf.json) also has the column definitions, under the "meta"."view"."columns" section.
 
-## TMSR: Traffic Match Summary Records
+## Traffic Match Summary Records (TMSR)
 
 ### Layer 1 Raw
 
-This is an excerpt of a TMSR file, named according to the pattern, `Austin_bt_summary_MM-DD-YYYY.txt`. The code `aws_transport/bt_json_standard.py` reads in the file from the AWAM share and copies it to the `raw` bucket.
+This is an excerpt of a TMSR file, named according to the pattern `Austin_bt_summary_MM-DD-YYYY.txt`. The code `aws_transport/bt_json_standard.py` reads in the file from the AWAM share and copies it to the `raw` bucket.
 
 ```
 51st_springdale,51st_manor,51st,Springdale,Westbound,51st,Manor,Eastbound,0.633,6/1/2019 12:00 AM,-1,-1,15,0,-1
@@ -349,7 +349,7 @@ lamar_5th,guadalupe_5th,5th,Lamar,Eastbound,5th,Guadalupe,Westbound,0.499,6/1/20
 congress_5th,5th_trinity,5th,Congress,Eastbound,5th,Trinity,Westbound,0.216,6/1/2019 12:00 AM,-1,-1,15,0,-1
 ```
 
-Each row represents a pair of readings for a particular mobile device, and has the following columns:
+Each row represents a pair of readings for a particular mobile device and has the following columns:
 
 | **Column** | **Element Name** | **Description**
 | --- | --- | ---
@@ -426,7 +426,7 @@ The key to CSV column mapping is:
 
 ### Layer 3 Ready Data
 
-The `aws_transport/bt_ready.py` code reads from the `rawjson` bucket, resolves reader identifiers to the respective entries in the Unit Data, and writes to the `ready` bucket. As before, linkages are created between "data"."device_id" and "devices"."device_id". 
+The `aws_transport/bt_ready.py` code reads from the `rawjson` bucket, resolves reader identifiers to the respective entries in the Unit Data, and writes to the `ready` bucket. As before, linkages are created between "data"."device_id" and "devices"."device_id." 
 
 ```json
 {
